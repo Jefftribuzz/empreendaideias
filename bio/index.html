@@ -1,0 +1,295 @@
+<!doctype html>
+<!--
+  Página "link na bio" — empreendaideias.com.br/bio
+  Versão independente (HTML + CSS puro).
+
+  Como publicar em qualquer hospedagem (Hostinger, HostGator, cPanel etc.):
+    1. Crie a pasta "bio" dentro de public_html
+    2. Envie este arquivo (index.html) e a foto (jeff.jpg) para public_html/bio/
+    3. Acesse empreendaideias.com.br/bio
+
+  Para trocar os links, edite os atributos href dos banners abaixo.
+-->
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jeff Tribuzz | Empreenda Ideias</title>
+    <meta name="description" content="Mentoria, YouTube e WhatsApp de Jeff Tribuzz — Empreenda Ideias." />
+    <meta property="og:title" content="Jeff Tribuzz | Empreenda Ideias" />
+    <meta property="og:description" content="Mentoria, YouTube e WhatsApp de Jeff Tribuzz." />
+    <meta property="og:url" content="https://empreendaideias.com.br/bio" />
+    <meta property="og:image" content="https://empreendaideias.com.br/bio/jeff.jpg" />
+    <meta property="og:type" content="profile" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #000;
+        --card: #0b0b0b;
+        --line: #1e1e1e;
+        --line-hover: #3a3a3a;
+        --muted: rgba(255, 255, 255, 0.6);
+        --yt: #ff0033;
+        --wa: #25d366;
+        --display: "Bebas Neue", Impact, "Arial Narrow", sans-serif;
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        background: var(--bg);
+        color: #fff;
+        font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap {
+        max-width: 480px;
+        min-height: 100vh;
+        margin: 0 auto;
+        padding: 48px 16px 32px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Cabeçalho */
+      header { display: flex; flex-direction: column; align-items: center; text-align: center; }
+      /* Avatar como story não visto: anel colorido; fica cinza depois de assistido */
+      .story {
+        position: relative; display: inline-flex; padding: 4px;
+        border: 0; border-radius: 50%; cursor: pointer;
+        background: linear-gradient(45deg, #feda75, #fa7e1e 30%, #d62976 60%, #962fbf 80%, #4f5bd5);
+        transition: transform 0.2s ease;
+      }
+      .story:hover { transform: scale(1.04); }
+      .story:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+      .story.seen { background: #3a3a3a; }
+      .story .gap { display: block; padding: 4px; border-radius: 50%; background: var(--bg); }
+      .avatar {
+        display: block; width: 112px; height: 112px; border-radius: 50%;
+        object-fit: cover; object-position: center 35%;
+      }
+      .story .play {
+        position: absolute; right: 4px; bottom: 4px;
+        width: 30px; height: 30px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        background: #fff; color: #000; box-shadow: 0 0 0 3px var(--bg);
+      }
+      .story .play svg { width: 12px; height: 12px; margin-left: 2px; }
+
+      /* Vídeo do story (janela vertical 9:16) */
+      .story-dialog {
+        width: 100%; height: 100%; max-width: none; max-height: none;
+        margin: 0; padding: 16px; border: 0;
+        background: transparent; color: #fff;
+      }
+      .story-dialog[open] { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; }
+      .story-dialog::backdrop { background: rgba(0, 0, 0, 0.96); }
+      .story-frame {
+        position: relative; overflow: hidden;
+        width: min(100%, calc(82vh * 9 / 16), 420px); aspect-ratio: 9 / 16;
+        border-radius: 16px; background: #111;
+      }
+      .story-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+      .story-close {
+        position: fixed;
+        top: calc(16px + env(safe-area-inset-top, 0px)); right: calc(16px + env(safe-area-inset-right, 0px));
+        width: 44px; height: 44px; border: 0; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        background: rgba(255, 255, 255, 0.14); color: #fff; cursor: pointer;
+      }
+      .story-close:hover { background: rgba(255, 255, 255, 0.24); }
+      .story-close:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+      .story-close svg { width: 22px; height: 22px; }
+      .story-link { font-size: 13px; color: rgba(255, 255, 255, 0.7); text-decoration: none; }
+      .story-link:hover { color: #fff; }
+      h1 {
+        margin-top: 20px;
+        font-family: var(--display);
+        font-weight: 400;
+        font-size: 44px;
+        line-height: 1;
+        letter-spacing: 0.02em;
+      }
+      .brand {
+        margin-top: 6px;
+        font-size: 12px; font-weight: 600;
+        letter-spacing: 0.24em; text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      /* Banners */
+      nav { margin-top: 36px; display: flex; flex-direction: column; gap: 14px; }
+      .banner {
+        position: relative; isolation: isolate; overflow: hidden;
+        display: block; height: 180px;
+        border-radius: 20px; border: 1px solid var(--line);
+        background: var(--card);
+        color: #fff; text-decoration: none;
+        transition: transform 0.25s ease, border-color 0.25s ease;
+      }
+      .banner:hover { transform: translateY(-3px); border-color: var(--line-hover); }
+      .banner:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+
+      .media { position: absolute; inset: 0; z-index: -1; }
+      .media img, .media svg { transition: transform 0.5s ease; }
+      .banner:hover .media img, .banner:hover .media svg { transform: scale(1.06); }
+
+      .content {
+        height: 100%; width: 64%;
+        padding: 20px;
+        display: flex; flex-direction: column; justify-content: space-between;
+      }
+      .eyebrow {
+        display: flex; align-items: center; gap: 8px;
+        font-size: 11px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase;
+        color: var(--muted);
+      }
+      .eyebrow::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+      .title {
+        font-family: var(--display);
+        font-weight: 400;
+        font-size: 34px;
+        line-height: 0.95;
+        letter-spacing: 0.01em;
+      }
+      .cta {
+        align-self: flex-start;
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 9px 14px; border-radius: 999px;
+        font-size: 13px; font-weight: 600; white-space: nowrap;
+        background: #fff; color: #000;
+      }
+      .cta svg { width: 14px; height: 14px; transition: transform 0.25s ease; }
+      .banner:hover .cta svg { transform: translateX(3px); }
+
+      /* Mentoria: foto à direita */
+      .mentoria .media img {
+        position: absolute; top: 0; right: 0;
+        width: 58%; height: 100%;
+        object-fit: cover; object-position: center 30%;
+      }
+      .mentoria .media::after {
+        content: ""; position: absolute; inset: 0;
+        background: linear-gradient(90deg, var(--card) 42%, rgba(11, 11, 11, 0.55) 62%, rgba(11, 11, 11, 0) 85%);
+      }
+      .mentoria .eyebrow { color: #fff; }
+
+      /* YouTube e WhatsApp: logo grande à direita */
+      .art {
+        position: absolute; right: -18px; top: 50%;
+        width: 150px; height: 150px; margin-top: -75px;
+      }
+      .youtube .media { background: radial-gradient(circle at 85% 50%, rgba(255, 0, 51, 0.3), transparent 60%), var(--card); }
+      .youtube .art { width: 116px; height: 116px; margin-top: -58px; right: -12px; rotate: -10deg; }
+      .youtube .eyebrow { color: var(--yt); }
+      .youtube .cta { background: var(--yt); color: #fff; }
+
+      .whatsapp .media { background: radial-gradient(circle at 85% 50%, rgba(37, 211, 102, 0.26), transparent 60%), var(--card); }
+      .whatsapp .art { color: var(--wa); rotate: 10deg; }
+      .whatsapp .eyebrow { color: var(--wa); }
+      .whatsapp .cta { background: var(--wa); color: #000; }
+
+      footer { margin-top: auto; padding-top: 40px; text-align: center; font-size: 12px; }
+      footer a { color: rgba(255, 255, 255, 0.35); text-decoration: none; }
+      footer a:hover { color: rgba(255, 255, 255, 0.7); }
+
+      @media (prefers-reduced-motion: reduce) {
+        .banner, .media img, .media svg, .cta svg, .story { transition: none; }
+        .story:hover, .banner:hover, .banner:hover .media img, .banner:hover .media svg, .banner:hover .cta svg { transform: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <header>
+        <button type="button" class="story" id="story" aria-label="Assistir vídeo de Jeff Tribuzz" aria-haspopup="dialog">
+          <span class="gap"><img class="avatar" src="/bio/jeff.jpg" alt="" width="112" height="112" /></span>
+          <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 4l15 8-15 8z"/></svg></span>
+        </button>
+        <h1>Jeff Tribuzz</h1>
+        <p class="brand">Empreenda Ideias</p>
+      </header>
+
+      <nav aria-label="Links">
+        <!-- Mentoria: abre o WhatsApp com mensagem pronta -->
+        <a class="banner mentoria" href="https://wa.me/5532999059545?text=Ol%C3%A1%20Jeff%21%20Gostaria%20de%20saber%20mais%20sobre%20a%20sua%20Mentoria." target="_blank" rel="noopener noreferrer">
+          <div class="media" aria-hidden="true">
+            <img src="/bio/jeff.jpg" alt="" />
+          </div>
+          <div class="content">
+            <span class="eyebrow">Mentoria</span>
+            <span class="title">Tire sua ideia do papel</span>
+            <span class="cta">Quero saber mais
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </span>
+          </div>
+        </a>
+
+        <a class="banner youtube" href="https://youtube.com/@jeff.tribuzz" target="_blank" rel="noopener noreferrer">
+          <div class="media" aria-hidden="true">
+            <svg class="art" viewBox="0 0 24 24"><rect x="1" y="4.5" width="22" height="15" rx="4.5" fill="#ff0033"/><path d="m10 9 5.5 3-5.5 3z" fill="#fff"/></svg>
+          </div>
+          <div class="content">
+            <span class="eyebrow">YouTube</span>
+            <span class="title">Vídeos sobre empreendedorismo</span>
+            <span class="cta">Assistir agora
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </span>
+          </div>
+        </a>
+
+        <a class="banner whatsapp" href="https://wa.me/5532999059545?text=Ol%C3%A1%20Jeff%21%20Gostaria%20de%20saber%20mais%20sobre%20seus%20servi%C3%A7os." target="_blank" rel="noopener noreferrer">
+          <div class="media" aria-hidden="true">
+            <svg class="art" viewBox="0 0 24 24" fill="currentColor"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.5h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35M12.05 21.5h-.01a9.4 9.4 0 0 1-4.8-1.32l-.34-.2-3.57.94.95-3.48-.22-.36a9.4 9.4 0 0 1-1.44-5.02c0-5.2 4.24-9.44 9.45-9.44 2.52 0 4.89.99 6.67 2.77a9.38 9.38 0 0 1 2.76 6.68c0 5.2-4.24 9.43-9.45 9.43m8.04-17.47A11.3 11.3 0 0 0 12.05.7C5.78.7.68 5.8.68 12.06c0 2 .52 3.96 1.52 5.68L.58 23.3l5.7-1.5a11.33 11.33 0 0 0 5.77 1.47c6.26 0 11.36-5.1 11.37-11.36 0-3.04-1.18-5.89-3.33-8.04"/></svg>
+          </div>
+          <div class="content">
+            <span class="eyebrow">WhatsApp</span>
+            <span class="title">Fale direto comigo</span>
+            <span class="cta">Chamar no WhatsApp
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </span>
+          </div>
+        </a>
+      </nav>
+
+      <footer>
+        <a href="https://empreendaideias.com.br">empreendaideias.com.br</a>
+      </footer>
+    </main>
+
+    <!-- Vídeo do story: para trocar, altere VIDEO_ID no script abaixo (ID do YouTube Shorts) -->
+    <dialog class="story-dialog" id="story-dialog" aria-label="Vídeo de Jeff Tribuzz">
+      <button type="button" class="story-close" id="story-close" aria-label="Fechar vídeo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+      <div class="story-frame">
+        <iframe id="story-iframe" title="Vídeo de Jeff Tribuzz no YouTube" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+      </div>
+      <a class="story-link" id="story-link" href="https://youtube.com/shorts/F4NHMhzqtuE" target="_blank" rel="noopener noreferrer">Abrir no YouTube ↗</a>
+    </dialog>
+
+    <script>
+      (function () {
+        var VIDEO_ID = "F4NHMhzqtuE";
+        var KEY = "bio-story-seen-" + VIDEO_ID;
+        var btn = document.getElementById("story");
+        var dlg = document.getElementById("story-dialog");
+        var frame = document.getElementById("story-iframe");
+        document.getElementById("story-link").href = "https://youtube.com/shorts/" + VIDEO_ID;
+
+        try { if (localStorage.getItem(KEY)) btn.classList.add("seen"); } catch (e) {}
+
+        btn.addEventListener("click", function () {
+          frame.src = "https://www.youtube.com/embed/" + VIDEO_ID + "?autoplay=1&playsinline=1&rel=0";
+          dlg.showModal();
+          btn.classList.add("seen");
+          try { localStorage.setItem(KEY, "1"); } catch (e) {}
+        });
+        document.getElementById("story-close").addEventListener("click", function () { dlg.close(); });
+        dlg.addEventListener("click", function (e) { if (e.target === dlg) dlg.close(); });
+        dlg.addEventListener("close", function () { frame.removeAttribute("src"); });
+      })();
+    </script>
+  </body>
+</html>
